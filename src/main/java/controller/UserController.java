@@ -29,6 +29,10 @@ public class UserController implements Serializable {
 			user.setPasswd(null);
 			logged = false;
 			checkData = true;
+			checkRegister = true;
+			return "register.jsf";
+		} else if (user.getName() == null || user.getPasswd() == null) {
+			checkRegister = true;
 			return "register.jsf";
 		} else {
 			logged = true;
@@ -57,6 +61,7 @@ public class UserController implements Serializable {
 			user.setPasswd(null);
 			logged = false;
 			checkUser = true;
+			checkRegister = true;
 			return "register.jsf";
 		}
 	}
@@ -68,6 +73,8 @@ public class UserController implements Serializable {
 
 	public String backToMenu() {
 		checkData = false;
+		checkRegister = false;
+		checkUser = false;
 		return "index.jsf";
 	}
 

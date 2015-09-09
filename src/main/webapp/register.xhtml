@@ -14,17 +14,21 @@
 				<h:form method="post">
 					<div class="form-group">
 						<label for="name">Name:</label>
-						<h:inputText class="form-control" name="name"
-							value="#{user.name}" required="true" />
+						<h:inputText class="form-control" name="name" value="#{user.name}"
+							required="true" />
 						<label for="password">Password:</label>
 						<h:inputSecret class="form-control" name="password"
-							value="#{user.passwd}" required="true" /><br />
+							value="#{user.passwd}" required="true" />
+						<br />
 						<div class="col-md-12 center">
 							<h:commandButton type="submit" class="btn btn-default"
 								value="Sign in" action="#{userController.signIn()}" />
 						</div>
 					</div>
-					<h:outputText value="User doesn't exist!" rendered="#{userController.checkData}"/>
+					<p class="center">
+						<h:outputText value="User doesn't exist!"
+							rendered="#{userController.checkData}" style="color:red" />
+					</p>
 				</h:form>
 			</div>
 		</div>
@@ -48,12 +52,17 @@
 								value="Register" action="#{userController.register()}" />
 						</div>
 					</div>
-					<h:outputText value="User with this name and password exists!" rendered="#{userController.checkUser}"/>
+					<p class="center">
+						<h:outputText
+							value="User with this name and password already exists!"
+							rendered="#{userController.checkUser}" style="color:red" />
+					</p>
 				</h:form>
 			</div>
 		</div>
 		<div class="col-md-12 center">
-			<a href="#{userController.backToMenu()}" class="btn btn-primary" style="margin-top: 5px;" role="button">Back</a>
+			<a href="#{userController.backToMenu()}" class="btn btn-primary"
+				style="margin-top: 5px;" role="button">Back</a>
 		</div>
 	</ui:define>
 </ui:composition>

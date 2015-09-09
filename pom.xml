@@ -85,6 +85,17 @@
 
 		<!-- First declare the APIs we depend on and need for compilation. All 
 			of them are provided by JBoss WildFly -->
+		<dependency>
+			<groupId>org.richfaces</groupId>
+			<artifactId>richfaces</artifactId>
+			<version>4.5.8.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.omnifaces</groupId>
+			<artifactId>omnifaces</artifactId>
+			<version>2.1</version>
+		</dependency>
 
 		<!-- Import the CDI API, we use provided scope as the API is included in 
 			JBoss WildFly -->
@@ -102,12 +113,6 @@
 			<groupId>org.jboss.spec.javax.jms</groupId>
 			<artifactId>jboss-jms-api_2.0_spec</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.omnifaces</groupId>
-			<artifactId>omnifaces</artifactId>
-			<version>2.1</version>
-		</dependency>
-
 		<!-- Import the Common Annotations API (JSR-250), we use provided scope 
 			as the API is included in JBoss WildFly -->
 		<dependency>
@@ -203,15 +208,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.jboss.as.plugins</groupId>
-			<artifactId>jboss-as-maven-plugin</artifactId>
-			<version>7.7.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.spec.javax.jms</groupId>
-			<artifactId>jboss-jms-api_2.0_spec</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>

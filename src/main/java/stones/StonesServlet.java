@@ -45,7 +45,7 @@ public class StonesServlet extends HttpServlet {
 			stonesNewGame = "";
 		}
 		if (!"".equals(stonesNewGame)) {
-			fieldStone = new Field(2, 2);
+			fieldStone = new Field(3, 3);
 			request.getSession().removeAttribute("fieldStone");
 			request.getSession().removeAttribute("stonesNewGame");
 			request.getSession().setAttribute("fieldStone", fieldStone);
@@ -59,7 +59,7 @@ public class StonesServlet extends HttpServlet {
 			columnToDo = "";
 		}
 		if (request.getSession().getAttribute("fieldStone") == null) {
-			fieldStone = new Field(2, 2);
+			fieldStone = new Field(3, 3);
 			request.getSession().setAttribute("fieldStone", fieldStone);
 		} else {
 			fieldStone = (Field) request.getSession().getAttribute("fieldStone");
