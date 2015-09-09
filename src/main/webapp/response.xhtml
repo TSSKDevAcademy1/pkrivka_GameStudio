@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	template="/WEB-INF/templates/index.xhtml">
+	<ui:define name="content">
+		<div class="col-md-3 col-md-offset-5 center">
+			<a href="mines.jsf"><img src="resources/images/left.png"
+				style="margin-top: 10px;" /></a> <a href="indexjsf"><img
+				src="resources/images/home.png" style="margin-top: 10px;" /></a> <a
+				href="stones.jsf"><img src="resources/images/right.png"
+				style="margin-top: 10px;" /></a>
+		</div>
+		<div class="container">
+			<div class="col-md-12 center" style="margin-top: 20px">
+				<h:form>
+					<h:graphicImage value="resources/images/akinator.png"
+						alt="Akinator, web genius" />
+					<h2>
+						<h:outputText id="result" value="#{userNumberBean.response}" />
+					</h2>
+					<h:commandButton id="back" value="Back" action="#{userNumberBean.goToMenu()}"
+						class="btn btn-default" />
+					<br />
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

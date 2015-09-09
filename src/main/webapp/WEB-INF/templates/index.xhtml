@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<head>
+<title>GameStudio</title>
+<STYLE>
+.center {
+	text-align: center;
+}
+
+.right {
+	text-align: right;
+}
+
+body {
+	padding-bottom: 70px;
+}
+</STYLE>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" />
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<BODY>
+	<h:panelGroup rendered="#{!userController.logged and !userController.checkRegister}">
+		<div class="col-md-3 col-md-offset-1" style="margin-top: 20px;">
+			<h:form>
+				<h:outputText value="Please " />
+				<h:commandLink action="#{userController.showRegister()}" value="[sign in]" />
+			</h:form>
+		</div>
+	</h:panelGroup>
+	<h:panelGroup rendered="#{userController.logged and !userController.checkRegister}">
+		<div class="col-md-3 col-md-offset-1" style="margin-top: 20px;">
+			<h:outputText value="Vitaj #{user.name}. " />
+			<h:form>
+				<h:commandLink action="#{userController.signOut()}" styleClass="glyphicon glyphicon-off" style="text-decoration:none; font-size:20px;"/>
+			</h:form>
+		</div>
+	</h:panelGroup>
+	<div id="content">
+		<ui:insert name="content">
+		</ui:insert>
+	</div>
+	<div class="navbar navbar-fixed-bottom center">
+		<p>Created by Ing.Patrik Krivka</p>
+	</div>
+</BODY>
+</html>

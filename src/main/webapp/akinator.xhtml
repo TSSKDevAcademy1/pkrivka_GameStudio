@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	template="/WEB-INF/templates/index.xhtml">
+	<ui:define name="content">
+		<div class="col-md-3 col-md-offset-5 center">
+			<a href="mines.jsf"
+				style="font-size: 35px; margin-top: 10px; text-decoration: none;"
+				class="glyphicon glyphicon-menu-left" /> <a href="index.jsf"
+				style="font-size: 40px; margin-top: 10px; text-decoration: none;"
+				class="glyphicon glyphicon-th" /> <a href="stones.jsf"
+				style="font-size: 35px; margin-top: 10px; text-decoration: none;"
+				class="glyphicon glyphicon-menu-right" />
+		</div>
+		<div class="container">
+			<div class="col-md-12 center" style="margin-top: 20px">
+				<h:form>
+					<!--  <h:graphicImage value="#{resource['images:wave.med.gif']}"
+			alt="Duke waving his hand" />-->
+					<h:graphicImage value="resources/images/akinator.png"
+						alt="Akinator, web genius" />
+					<h2>Hello, I am Akinator. I am thinking of a number from
+						#{userNumberBean.minimum} to #{userNumberBean.maximum}. Can you
+						guess it?</h2>
+					<h:panelGroup rendered="#{userNumberBean.newGame}">
+						<p>
+							<h:inputText id="userNo" title="Enter a number from 0 to 10:"
+								value="#{userNumberBean.userNumber}">
+								<f:validateLongRange minimum="#{userNumberBean.minimum}"
+									maximum="#{userNumberBean.maximum}" />
+							</h:inputText>
+							<h:commandButton id="submit" value="Submit" action="response" />
+						</p>
+						<h:message showSummary="true" showDetail="false"
+							style="color: #d20005;
+                       font-family: 'New Century Schoolbook', serif;
+                       font-style: oblique;
+                       text-decoration: overline"
+							id="errors1" for="userNo" />
+					</h:panelGroup>
+					<br />
+					<h:commandLink action="#{userNumberBean.startNewGame()}"
+						value="New Game" class="btn btn-primary" style="margin-top: 5px;" />
+					<br />
+					<h:commandLink action="#{userNumberBean.endGame()}"
+						value="End Game" class="btn btn-danger" style="margin-top: 5px;"
+						rendered="#{userNumberBean.newGame}" />
+					<h:panelGroup rendered="#{userNumberBean.akinatorShowMenu}">
+						<h:commandLink action="akinatorScore.jsf" value="Hall Of Fame"
+							class="btn btn-primary" style="margin-top: 5px;" />
+						<br />
+						<h:commandLink action="rateAkinator.jsf" value="Rate Game"
+							class="btn btn-primary" style="margin-top: 5px;" />
+						<br />
+						<h:commandLink action="akinatorComments.jsf"
+							value="Leave Comment" class="btn btn-primary"
+							style="margin-top: 5px;" />
+						<br />
+					</h:panelGroup>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
