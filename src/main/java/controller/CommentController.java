@@ -2,17 +2,19 @@ package controller;
 
 import java.util.List;
 
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import entity.Comment;
-import entity.Rating;
 import services.CommentService;
 import services.GameService;
-import services.RatingService;
+import java.io.Serializable;
 
 @Named
-public class CommentController {
+@SessionScoped
+public class CommentController implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	@Inject
 	CommentService commentService;
@@ -20,6 +22,7 @@ public class CommentController {
 	GameService gameService;
 	@Inject
 	Comment comment;
+	private String gameToComment;
 
 	public String addComment(String gameName, String userName, String userPassword) {
 		String comm = comment.getComment();
@@ -38,8 +41,22 @@ public class CommentController {
 
 	public List<Comment> getAllCommentsToGame(String gameName) {
 		long id = gameService.getGameId(gameName);
-		List<Comment> comments = commentService.getComment(id);
+		List<Comment> comments = commentService.getComments(id);
 		return comments;
 	}
 
+	public String commentGame(String gameName) {
+		gameToComment = gameName;
+		return "gameComments.jsf";
+	}
+	
+	public String deleteComment(long id){
+		commentService.deleteComment(id);
+		return "gameComments.jsf";
+	}
+
+	public String getGameToComment() {
+		return gameToComment;
+	}
+	
 }

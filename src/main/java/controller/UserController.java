@@ -29,6 +29,10 @@ public class UserController implements Serializable {
 			user.setPasswd(null);
 			logged = false;
 			checkData = true;
+			checkRegister = true;
+			return "register.jsf";
+		} else if (user.getName() == null || user.getPasswd() == null) {
+			checkRegister = true;
 			return "register.jsf";
 		} else {
 			logged = true;
@@ -57,6 +61,7 @@ public class UserController implements Serializable {
 			user.setPasswd(null);
 			logged = false;
 			checkUser = true;
+			checkRegister = true;
 			return "register.jsf";
 		}
 	}
@@ -68,7 +73,41 @@ public class UserController implements Serializable {
 
 	public String backToMenu() {
 		checkData = false;
+		checkRegister = false;
+		checkUser = false;
 		return "index.jsf";
+	}
+
+	public boolean checkAdmin(String name, String password) {
+		return userservice.checkAdmin(name, password);
+	}
+
+	public void setMinesForUser(String name, String password, int minesNumRows, int minesNumCols, int minesNumMines) {
+		userservice.setMinesForUser(name, password, minesNumRows, minesNumCols, minesNumMines);
+	}
+
+	public void setStonesForUser(String name, String password, int stonesNumRows, int stonesNumCols) {
+		userservice.setStonesForUser(name, password, stonesNumRows, stonesNumCols);
+	}
+
+	public int getMinesRows(String name, String password) {
+		return userservice.getMinesRows(name, password);
+	}
+
+	public int getMinesCols(String name, String password) {
+		return userservice.getMinesCols(name, password);
+	}
+
+	public int getMinesMines(String name, String password) {
+		return userservice.getMinesMines(name, password);
+	}
+	
+	public int getStonesRows(String name, String password){
+		return userservice.getStonesRows(name, password);
+	}
+	
+	public int getStonesCols(String name, String password){
+		return userservice.getStonesCols(name, password);
 	}
 
 	public boolean isLogged() {

@@ -27,10 +27,14 @@ public class CommentService {
 		em.persist(Comment);
 	}
 
-	public List<Comment> getComment(long gameId) {
+	public List<Comment> getComments(long gameId) {
 		List<Comment> comments = em.createQuery("select c from Comment c join c.game g where g.id=:gameId", Comment.class)
 				.setParameter("gameId", gameId).getResultList();
 		return comments;
+	}
+	
+	public void deleteComment(long id){
+		em.createQuery("delete from Comment c where c.id=:id").setParameter("id", id).executeUpdate();
 	}
 
 }

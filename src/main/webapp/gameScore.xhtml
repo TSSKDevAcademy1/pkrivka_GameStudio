@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	template="/WEB-INF/templates/index.xhtml">
+	<ui:define name="content">
+		<ui:param name="game" value="#{scoreController.gameToShowScore}" />
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<h2 class="center">
+					Top 10 best Players -
+					<h:outputText value="MineSweeper" rendered="#{game=='mines'}" />
+					<h:outputText value="N-Puzzle" rendered="#{game=='stones'}" />
+					<h:outputText value="Akinator" rendered="#{game=='akinator'}" />
+				</h2>
+				<br />
+				<h:dataTable value="#{scoreController.getScores(game)}" var="scores"
+					styleClass="table table-hover">
+					<h:column>
+						<f:facet name="header">Name:</f:facet>
+						<h:link value="#{scores.user.name}" outcome="scores" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Score:</f:facet>
+						<h:link value="#{scores.score}" outcome="scores" />
+						<h:outputText value=" sec" rendered="#{game!='akinator'}" />
+						<h:outputText value=" step/s" rendered="#{game=='akinator'}" />
+					</h:column>
+					<h:column>
+						<h:form rendered="#{userController.logged}">
+							<h:commandLink
+								action="#{scoreController.deleteScore(scores.id)}"
+								style="text-decoration:none; font-size:25px"
+								rendered="#{userController.checkAdmin(user.name,user.passwd)}"
+								class="glyphicon glyphicon-remove" />
+						</h:form>
+					</h:column>
+				</h:dataTable>
+				<h:form styleClass="center">
+					<h:commandLink action="#{''.concat(game).concat('.jsf')}"
+						value="Menu" style="margin-top:5px" class="btn btn-primary" />
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

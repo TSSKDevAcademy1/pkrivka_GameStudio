@@ -6,7 +6,77 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	template="/WEB-INF/templates/index.xhtml">
 	<ui:define name="content">
-		<o:resourceInclude path="/stonesServlet" />
-		
+		<div class="col-md-3 col-md-offset-5 center">
+			<a href="akinator.jsf"
+				style="font-size: 35px; margin-top: 10px; text-decoration: none;"
+				class="glyphicon glyphicon-menu-left" /> &#xA0;<a href="index.jsf"
+				style="font-size: 40px; margin-top: 10px; text-decoration: none;"
+				class="glyphicon glyphicon-th" /> <a href="mines.jsf"
+				style="font-size: 35px; margin-top: 10px; text-decoration: none;"
+				class="glyphicon glyphicon-menu-right" />
+		</div>
+		<div class="container">
+			<div class="col-md-12 center" style="margin-top: 20px;">
+				<h1>Welcome in the game N-Puzzle!</h1>
+				<br />
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<o:resourceInclude path="/stonesServlet" />
+						<h:panelGroup rendered="#{!stonesController.newGame}">
+							<p class="text-justify">The N-Puzzle is a board game for a
+								single player. It consists of (N^2- 1) numbered squared tiles in
+								random order, and one blank space ("a missing tile"). The object
+								of the puzzle is to rearrange the tiles in order by making
+								sliding moves that use the empty space, using the fewest moves.
+								Moves of the puzzle are made by sliding an adjacent tile into
+								the empty space. Only tiles that are horizontally or vertically
+								adjacent to the blank space (not diagonally adjacent) may be
+								moved.</p>
+							<h:form>
+								<h:commandLink action="#{stonesController.startNewGame()}"
+									value="New Game" class="btn btn-primary" role="button"
+									style="margin-top: 5px;" />
+								<br />
+								<h:commandLink
+									action="#{scoreController.showScoreInGame('stones')}"
+									value="Hall Of Fame" class="btn btn-primary" role="button"
+									style="margin-top: 5px;" />
+								<br />
+								<h:commandLink action="#{ratingController.rateGame('stones')}"
+									value="Rate Game" class="btn btn-primary" role="button"
+									style="margin-top: 5px;" />
+								<br />
+								<h:commandLink
+									action="#{commentController.commentGame('stones')}"
+									value="Leave Comment" class="btn btn-primary" role="button"
+									style="margin-top: 5px;" />
+							</h:form>
+							<br />
+						</h:panelGroup><br /> <br />
+						<h:panelGroup rendered="#{stonesController.newGame}">
+							<div class="col-md-6 col-md-offset-3"
+								style="border: 1px solid black; border-radius: 25px; text-align: left;">
+								<p style="text-align: left">
+									<b>Modify game:</b>
+								</p>
+								<h:form method="post">
+									<label for="row">Number of rows:</label>
+									<h:inputText class="form-control" name="row"
+										value="#{stonesSettingsController.numberRows}" required="true" />
+									<label for="col">Number of columns:</label>
+									<h:inputText class="form-control" name="col"
+										value="#{stonesSettingsController.numberCols}" required="true" />
+									<br />
+									<div style="text-align: center">
+										<h:commandButton type="submit" class="btn btn-default"
+											value="Submit" action="#{stonesSettingsController.setup()}" />
+									</div>
+								</h:form>
+							</div>
+						</h:panelGroup>
+					</div>
+				</div>
+			</div>
+		</div>
 	</ui:define>
 </ui:composition>

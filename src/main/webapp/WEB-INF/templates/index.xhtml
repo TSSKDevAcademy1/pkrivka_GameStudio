@@ -31,28 +31,34 @@ body {
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <BODY>
-	<h:panelGroup rendered="#{!userController.logged and !userController.checkRegister}">
+	<h:panelGroup
+		rendered="#{!userController.logged and !userController.checkRegister}">
 		<div class="col-md-3 col-md-offset-1" style="margin-top: 20px;">
 			<h:form>
-				<h:outputText value="Please " />
-				<h:commandLink action="#{userController.showRegister()}" value="[sign in]" />
+				<h:outputText value="Please, " />
+				<b><h:commandLink action="#{userController.showRegister()}"
+						value="sign_in / register." /></b>
 			</h:form>
 		</div>
 	</h:panelGroup>
-	<h:panelGroup rendered="#{userController.logged and !userController.checkRegister}">
+	<h:panelGroup
+		rendered="#{userController.logged and !userController.checkRegister}">
 		<div class="col-md-3 col-md-offset-1" style="margin-top: 20px;">
-			<h:outputText value="Vitaj #{user.name}. " />
 			<h:form>
-				<h:commandLink action="#{userController.signOut()}" styleClass="glyphicon glyphicon-off" style="text-decoration:none; font-size:20px;"/>
+				<h:commandLink action="#{userController.signOut()}"
+					styleClass="glyphicon glyphicon-off"
+					style="text-decoration:none; font-size:20px;" />&#xA0;
+					<h:outputText value="Hello #{user.name}. " /><h:outputText value="[admin]" style="color:red;" rendered="#{userController.checkAdmin(user.name,user.passwd)}"/>
 			</h:form>
+			
 		</div>
 	</h:panelGroup>
 	<div id="content">
 		<ui:insert name="content">
 		</ui:insert>
 	</div>
-	<div class="navbar navbar-fixed-bottom center">
-		<p>Created by Ing.Patrik Krivka</p>
+	<div class="navbar navbar-fixed-bottom center" style="background-color: #b0c4de;">
+		<p>Created by Ing.Patrik Krivka<br />&#169; 2015</p>
 	</div>
 </BODY>
 </html>

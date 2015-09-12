@@ -1,5 +1,6 @@
 package entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,7 +13,7 @@ public class Rating {
 	@GeneratedValue
 	private long id;
 	private int rating;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Game game;
 
 	public Rating() {

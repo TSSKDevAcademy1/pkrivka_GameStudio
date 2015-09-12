@@ -20,6 +20,13 @@ public class ScoreService {
 	@Inject
 	private GameService gameService;
 
+	public void addScore(int steps, String name, String password, String gamename) {
+		User user = userservice.getUser(name, password);
+		Game game = gameService.getGame(gamename);
+		Score score = new Score(steps, user, game);
+		em.persist(score);
+	}
+	
 	public void addScore(long time, String name, String password, String gamename) {
 		User user = userservice.getUser(name, password);
 		Game game = gameService.getGame(gamename);
@@ -31,6 +38,10 @@ public class ScoreService {
 		List<Score> scores = em.createQuery("select s from Score s join s.game g where g.id=:gameId order by score", Score.class)
 				.setParameter("gameId", gameId).setMaxResults(10).getResultList();
 		return scores;
+	}
+	
+	public void deleteScore(long id){
+		em.createQuery("delete from Score s where s.id=:id").setParameter("id", id).executeUpdate();
 	}
 
 }

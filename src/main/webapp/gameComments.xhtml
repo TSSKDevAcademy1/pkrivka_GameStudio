@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	template="/WEB-INF/templates/index.xhtml">
+	<ui:define name="content">
+		<ui:param name="game" value="#{commentController.gameToComment}" />
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<h2 class="center">Game comments:</h2>
+				<br />
+				<h:dataTable value="#{commentController.getAllCommentsToGame(game)}"
+					var="comments" styleClass="table table-hover">
+					<h:column>
+						<f:facet name="header">Name:</f:facet>
+						<h:link value="#{comments.user.name}" outcome="comments" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Comment:</f:facet>
+						<h:link value="#{comments.comment}" outcome="comments" />
+					</h:column>
+					<h:column>
+						<h:form rendered="#{userController.logged}">
+							<h:commandLink
+								action="#{commentController.deleteComment(comments.id)}"
+								style="text-decoration:none; font-size:25px"
+								rendered="#{userController.checkAdmin(user.name,user.passwd)}"
+								class="glyphicon glyphicon-remove" />
+						</h:form>
+					</h:column>
+				</h:dataTable>
+				<h:form styleClass="center">
+					<h:panelGroup rendered="#{userController.logged}">
+						<h:inputTextarea value="#{comment.comment}" />
+						<br />
+						<h:commandButton type="submit" class="btn btn-default"
+							style="margin-top:10px;" value="Comment"
+							action="#{commentController.addComment(game,user.name,user.passwd)}" />
+						<br />
+					</h:panelGroup>
+					<h:outputText
+						value="You must SIGN IN, if you want to leave comment!"
+						style="color:red; font-size:20px"
+						rendered="#{!userController.logged}" />
+					<br />
+					<h:commandLink action="#{''.concat(game).concat('.jsf')}"
+						value="Back" style="margin-top:5px" class="btn btn-primary" />
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

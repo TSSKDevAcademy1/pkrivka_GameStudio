@@ -6,6 +6,78 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	template="/WEB-INF/templates/index.xhtml">
 	<ui:define name="content">
-		<o:resourceInclude path="/minesServlet" />
+		<div class="col-md-3 col-md-offset-5 center">
+			<a href="stones.jsf"
+				style="font-size: 35px; margin-top: 10px; text-decoration: none;"
+				class="glyphicon glyphicon-menu-left" /> &#xA0;<a href="index.jsf"
+				style="font-size: 40px; margin-top: 10px; text-decoration: none;"
+				class="glyphicon glyphicon-th" /> <a href="akinator.jsf"
+				style="font-size: 35px; margin-top: 10px; text-decoration: none;"
+				class="glyphicon glyphicon-menu-right" />
+		</div>
+		<div class="container">
+			<div class="col-md-12 center" style="margin-top: 20px;">
+				<h1>Welcome in the game MineSweeper!</h1>
+				<br />
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<o:resourceInclude path="/minesServlet" />
+						<h:panelGroup rendered="#{!minesController.newGame}">
+							<p class="text-justify">Minesweeper is a single-player puzzle
+								video game. The objective of the game is to clear a rectangular
+								board containing hidden mines without detonating any of them,
+								with help from clues about the number of neighboring mines in
+								each field. The game originates from the 1960s, and has been
+								written for many computing platforms in use today</p>
+							<h:form>
+								<h:commandLink action="#{minesController.startNewGame()}"
+									value="New Game" class="btn btn-primary" role="button"
+									style="margin-top: 5px;" />
+								<br />
+								<h:commandLink
+									action="#{scoreController.showScoreInGame('mines')}"
+									value="Hall Of Fame" class="btn btn-primary" role="button"
+									style="margin-top: 5px;" />
+								<br />
+								<h:commandLink action="#{ratingController.rateGame('mines')}"
+									value="Rate Game" class="btn btn-primary" role="button"
+									style="margin-top: 5px;" />
+								<br />
+								<h:commandLink
+									action="#{commentController.commentGame('mines')}"
+									value="Leave Comment" class="btn btn-primary" role="button"
+									style="margin-top: 5px;" />
+							</h:form>
+							<br />
+						</h:panelGroup>
+						<br /> <br />
+						<h:panelGroup rendered="#{minesController.newGame}">
+							<div class="col-md-6 col-md-offset-3"
+								style="border: 1px solid black; border-radius: 25px; text-align: left;">
+								<p style="text-align: left">
+									<b>Modify game:</b>
+								</p>
+								<h:form method="post">
+									<label for="row">Number of rows:</label>
+									<h:inputText class="form-control" name="row"
+										value="#{minesSettingsController.numberRows}" required="true" />
+									<label for="col">Number of columns:</label>
+									<h:inputText class="form-control" name="col"
+										value="#{minesSettingsController.numberCols}" required="true" />
+									<label for="col">Number of mines:</label>
+									<h:inputText class="form-control" name="col"
+										value="#{minesSettingsController.numberMines}" required="true" />
+									<br />
+									<div style="text-align: center">
+										<h:commandButton type="submit" class="btn btn-default"
+											value="Submit" action="#{minesSettingsController.setup()}" />
+									</div>
+								</h:form>
+							</div>
+						</h:panelGroup>
+					</div>
+				</div>
+			</div>
+		</div>
 	</ui:define>
 </ui:composition>

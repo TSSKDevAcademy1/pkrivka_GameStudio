@@ -30,6 +30,10 @@ public class Comment {
 		this.game = game;
 		this.user = user;
 	}
+	
+	public long getId() {
+		return id;
+	}
 
 	public String getComment() {
 		return comment;

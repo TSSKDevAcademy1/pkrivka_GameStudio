@@ -11,22 +11,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controller.MinesController;
 import controller.ScoreController;
+import controller.StonesController;
 import controller.UserController;
 import entity.User;
+import minesweeper.MinesField;
 
 /**
  * Servlet implementation class StonesServlet
  */
-@Named
 @WebServlet("/stonesServlet")
 public class StonesServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	ScoreController scorecontroller;
+	ScoreController scoreController;
 	@Inject
-	UserController usercontroller;
+	UserController userController;
+	@Inject
+	StonesController stonesController;
 	@Inject
 	User user;
 
@@ -36,42 +40,86 @@ public class StonesServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		Field fieldStone;
-		String stonesNewGame = request.getParameter("stonesNewGame");
+		StonesField fieldStone;
+		String stonesNewGame = null;
+		String stonesRestartGame = request.getParameter("stonesRestartGame");
 		String stonesMenu = request.getParameter("stonesMenu");
 		String rowToDo = request.getParameter("row");
 		String columnToDo = request.getParameter("column");
-		if (stonesNewGame == null) {
-			stonesNewGame = "";
+		int actualNumRow = 0;
+		int actualNumCol = 0;
+
+		if (request.getSession().getAttribute("stonesNewGame") != null
+				&& request.getParameter("stonesNewGame") == null) {
+			stonesNewGame = (String) request.getSession().getAttribute("stonesNewGame");
+		} else if (request.getParameter("stonesNewGame") != null) {
+			stonesNewGame = request.getParameter("stonesNewGame");
 		}
-		if (!"".equals(stonesNewGame)) {
-			fieldStone = new Field(2, 2);
-			request.getSession().removeAttribute("fieldStone");
-			request.getSession().removeAttribute("stonesNewGame");
-			request.getSession().setAttribute("fieldStone", fieldStone);
-			request.getSession().setAttribute("stonesNewGame", stonesNewGame);
-			stonesStartTime = System.currentTimeMillis();
+
+		if (stonesNewGame == null && stonesController.isNewGame()) {
+			stonesNewGame = "true";
 		}
+
 		if (rowToDo == null) {
 			rowToDo = "";
 		}
 		if (columnToDo == null) {
 			columnToDo = "";
 		}
-		if (request.getSession().getAttribute("fieldStone") == null) {
-			fieldStone = new Field(2, 2);
+
+		if ("true".equals(stonesNewGame)) {
+			if (userController.isLogged()) {
+				if (userController.getStonesRows(user.getName(), user.getPasswd()) != 0
+						&& userController.getStonesCols(user.getName(), user.getPasswd()) != 0) {
+					fieldStone = new StonesField(userController.getStonesRows(user.getName(), user.getPasswd()),
+							userController.getStonesCols(user.getName(), user.getPasswd()));
+				} else
+					fieldStone = new StonesField(3, 3);
+			} else
+				fieldStone = new StonesField(3, 3);
+
+			request.getSession().removeAttribute("fieldStone");
+			request.getSession().removeAttribute("stonesNewGame");
+			request.getSession().setAttribute("fieldStone", fieldStone);
+			stonesNewGame = "false";
+			request.getSession().setAttribute("stonesNewGame", stonesNewGame);
+			stonesController.setWinState(false);
+			stonesStartTime = System.currentTimeMillis();
+		}
+		if ("true".equals(stonesRestartGame)) {
+			fieldStone = (StonesField) request.getSession().getAttribute("fieldStone");
+			actualNumRow = fieldStone.getRowCount();
+			actualNumCol = fieldStone.getColumnCount();
+			fieldStone = new StonesField(actualNumRow, actualNumCol);
+			request.getSession().removeAttribute("fieldStone");
+			request.getSession().removeAttribute("stonesNewGame");
+			request.getSession().setAttribute("fieldStone", fieldStone);
+			stonesRestartGame = "false";
+			request.getSession().setAttribute("stonesNewGame", stonesNewGame);
+			stonesController.setWinState(false);
+			stonesStartTime = System.currentTimeMillis();
+		}
+
+		if (request.getSession().getAttribute("fieldStone") == null
+				&& request.getSession().getAttribute("stonesNewGame") == null) {
+			fieldStone = new StonesField(3, 3);
 			request.getSession().setAttribute("fieldStone", fieldStone);
 		} else {
-			fieldStone = (Field) request.getSession().getAttribute("fieldStone");
-			request.getSession().setAttribute("fieldStone", fieldStone);
+			fieldStone = (StonesField) request.getSession().getAttribute("fieldStone");
 			stonesNewGame = (String) request.getSession().getAttribute("stonesNewGame");
+			if (stonesController.isWinState()) {
+				stonesStartTime = System.currentTimeMillis();
+				stonesController.setWinState(false);
+			}
 		}
+
 		if (stonesMenu == null) {
 			stonesMenu = "false";
-		} else {
+		} else if ("true".equals(stonesMenu)) {
 			stonesNewGame = "";
 			request.getSession().removeAttribute("fieldStone");
 			request.getSession().removeAttribute("stonesNewGame");
+			stonesController.setNewGame(false);
 		}
 		Position emptyPosition = fieldStone.check();
 		int number = checkWin(fieldStone);
@@ -81,38 +129,8 @@ public class StonesServlet extends HttpServlet {
 			rowToDo = "" + number + "";
 			columnToDo = "" + number + "";
 		}
-		out.println("<div class=\"col-md-3 col-md-offset-5 center\">");
-		out.println(
-				"<a href=\"akinator.jsf\" style=\"font-size:35px; margin-top: 10px; text-decoration: none;\" class=\"glyphicon glyphicon-menu-left\"></a>");
-		out.println(
-				"<a href=\"index.jsf\" style=\"font-size:40px; margin-top: 10px; text-decoration: none;\" class=\"glyphicon glyphicon-th\"></a>");
-		out.println(
-				"<a href=\"mines.jsf\" style=\"font-size:35px; margin-top: 10px; text-decoration: none;\" class=\"glyphicon glyphicon-menu-right\"></a>");
-		out.println("</div>");
-		out.println("<div class=\"container\">");
-		out.println("<div class=\"col-md-12 center\">");
-		out.println("<h1>Welcome in the game N-Puzzle!</h1><br/>");
-		if (!"true".equals(stonesNewGame)) {
-			out.println("<div class=\"row\">");
-			out.println("<div class=\"col-md-6 col-md-offset-3\">");
-			out.println("<p class=\"text-justify\">The N-Puzzle is a board game for a single player. It consists of "
-					+ "(N^2- 1) numbered squared tiles in random order, and one blank space (\"a missing tile\"). "
-					+ "The object of the puzzle is to rearrange the tiles in order by making sliding moves that use the "
-					+ "empty space, using the fewest moves. Moves of the puzzle are made by sliding an adjacent tile into the "
-					+ "empty space. Only tiles that are horizontally or vertically adjacent to the blank space (not "
-					+ "diagonally adjacent) may be moved.</p>");
-			out.println(
-					"<a href=\"stones.jsf?stonesNewGame=true\" class=\"btn btn-primary\" role=\"button\" style=\"margin-top:5px;\">New Game</a><br>");
-			out.println(
-					"<a href=\"stonesScore.jsf\" class=\"btn btn-primary\" role=\"button\" style=\"margin-top:5px;\">Hall Of Fame</a><br>");
-			out.println(
-					"<a href=\"rateStones.jsf\" class=\"btn btn-primary\" role=\"button\" style=\"margin-top:5px;\">Rate Game</a><br>");
-			out.println(
-					"<a href=\"stonesComments.jsf\" class=\"btn btn-primary\" role=\"button\" style=\"margin-top:5px;\">Leave Comment</a><br>");
-			out.println("</div>");
-			out.println("</div>");
-		}
-		if ("true".equals(stonesNewGame)) {
+
+		if (stonesNewGame != null && !"true".equals(stonesMenu)) {
 			if (!"".equals(rowToDo) && !"".equals(columnToDo)) {
 				if (emptyPosition.getRow() < fieldStone.getRowCount()
 						&& Integer.parseInt(rowToDo) == emptyPosition.getRow() + 1
@@ -135,32 +153,37 @@ public class StonesServlet extends HttpServlet {
 					printField(out, fieldStone);
 				} else
 					printField(out, fieldStone);
-				stonesTime = (System.currentTimeMillis() - stonesStartTime) / 1000;
 			} else
 				printField(out, fieldStone);
 			emptyPosition = fieldStone.check();
 			number = checkWin(fieldStone);
+			out.println(
+					"<br><a href=\"?stonesNewGame=true\" class=\"btn btn-primary\" role=\"button\" style=\"margin-top:5px;\">New Game</a><br>");
+			out.println(
+					"<a href=\"?stonesRestartGame=true\" class=\"btn btn-success\" role=\"button\" style=\"margin-top:5px;\">Restart Game</a><br>");
+			out.println(
+					"<a href=\"?stonesMenu=true\" class=\"btn btn-danger\" role=\"button\" style=\"margin-top:5px;\">End Game</a><br>");
 			if (number == fieldStone.getRowCount() * fieldStone.getColumnCount()
 					&& emptyPosition.getRow() == fieldStone.getRowCount() - 1
-					&& emptyPosition.getColumn() == fieldStone.getColumnCount() - 1) {
-				out.println("You WIN!<br>");
-				out.println("Your playing time was " + stonesTime + "s.");
-				if (usercontroller.isLogged()) {
-					scorecontroller.addScore(stonesTime, user.getName(), user.getPasswd(), "stones");
+					&& emptyPosition.getColumn() == fieldStone.getColumnCount() - 1 && !stonesController.isWinState()) {
+				stonesTime = (System.currentTimeMillis() - stonesStartTime) / 1000;
+				stonesController.setWinState(true);
+				// out.println(
+				// "<span style=\"color:red;font-weight: bold;\">You
+				// WON!!!</span><br><span style=\"color:red;font-weight:
+				// bold;\">Your playing time was "
+				// + stonesTime + "s. </span>");
+				out.println("<script type=\"text/javascript\">alert(\"You WON!!! Your playing time was " + stonesTime
+						+ "s.\")</script>");
+				if (userController.isLogged()) {
+					scoreController.addScore(stonesTime, user.getName(), user.getPasswd(), "stones");
 				}
 			}
-			out.println("<br>");
-			out.println(
-					"<a href=\"?stonesNewGame=true\" class=\"btn btn-primary\" role=\"button\" style=\"margin-top:5px;\">New Game</a><br>");
-			out.println(
-					"<a href=\"?stonesMenu=true\" class=\"btn btn-danger\" role=\"button\" style=\"margin-top:5px;\">End Game</a>");
+			// out.println("<br>");
 		}
-
-		out.println("</div>");// col-md-12 center
-		out.println("</div>");// container
 	}
 
-	void printField(PrintWriter out, Field fieldStone) {
+	void printField(PrintWriter out, StonesField fieldStone) {
 		for (int row = 0; row < fieldStone.getRowCount(); row++) {
 			for (int column = 0; column < fieldStone.getColumnCount(); column++) {
 				if (fieldStone.getTile(row, column).getState() == Tile.State.OPEN) {
@@ -181,7 +204,7 @@ public class StonesServlet extends HttpServlet {
 		}
 	}
 
-	private int checkWin(Field fieldStone) {
+	private int checkWin(StonesField fieldStone) {
 		int number = 1;
 		for (int row = 0; row < fieldStone.getRowCount(); row++) {
 			for (int column = 0; column < fieldStone.getColumnCount(); column++) {

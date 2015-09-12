@@ -2,25 +2,28 @@ package controller;
 
 import java.util.List;
 
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import entity.Rating;
 import services.GameService;
 import services.RatingService;
+import java.io.Serializable;
 
 @Named
-public class RatingController {
-
+@SessionScoped
+public class RatingController implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	@Inject
 	RatingService ratingService;
 	@Inject
 	GameService gameService;
-	@Inject
-	UserController userController;
+	private String gameToRate;
 
 	public String addRating(int rate, String gameName) {
-		ratingService.addComment(rate, gameName);
+		ratingService.addRating(rate, gameName);
 		switch (gameName) {
 		case "mines":
 			return "mines.jsf";
@@ -45,12 +48,22 @@ public class RatingController {
 		}
 		return rating;
 	}
-	
-	public boolean isRated(String gameName){
-		int rating=getRating(gameName);
-		if (rating==0){
+
+	public boolean isRated(String gameName) {
+		int rating = getRating(gameName);
+		if (rating == 0) {
 			return false;
-		}else return true;
+		} else
+			return true;
+	}
+
+	public String rateGame(String gameName) {
+		gameToRate = gameName;
+		return "rateGame.jsf";
+	}
+
+	public String getGameToRate() {
+		return gameToRate;
 	}
 
 }

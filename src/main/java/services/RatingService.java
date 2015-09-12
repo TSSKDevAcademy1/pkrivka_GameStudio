@@ -17,7 +17,7 @@ public class RatingService {
 	@Inject
 	GameService gameservice;
 
-	public void addComment(int rate, String gamename) {
+	public void addRating(int rate, String gamename) {
 		Game game = gameservice.getGame(gamename);
 		Rating rating = new Rating(rate, game);
 		em.persist(rating);

@@ -36,15 +36,14 @@ public class UserNumberBean implements Serializable {
 	private int maximum = 10;
 	private int minimum = 0;
 	private boolean newGame = false;
-	private long akinatorStartTime = 0;
-	private long akinatorTime = 0;
 	private boolean akinatorShowMenu = true;
+	private int steps;
 
 	public String startNewGame() {
 		newGame = true;
+		steps=1;
 		Random randomGR = new Random();
 		randomInt = new Integer(randomGR.nextInt(maximum + 1));
-		akinatorStartTime = System.currentTimeMillis();
 		System.out.println("Akinator's number: " + randomInt);
 		akinatorShowMenu = false;
 		return "akinator.jsf";
@@ -81,8 +80,10 @@ public class UserNumberBean implements Serializable {
 		if ((userNumber == null) || (userNumber.compareTo(randomInt) != 0)) {
 			if (userNumber != null) {
 				if (userNumber < randomInt) {
+					steps++;
 					return "My number is bigger.";
 				} else if (userNumber > randomInt) {
+					steps++;
 					return "My number is smaller.";
 				}
 			}
@@ -92,11 +93,10 @@ public class UserNumberBean implements Serializable {
 			// Random randomGR = new Random();
 			// randomInt = new Integer(randomGR.nextInt(maximum + 1));
 			newGame = false;
-			akinatorTime = (System.currentTimeMillis() - akinatorStartTime) / 1000;
 			if (usercontroller.isLogged()) {
-				scorecontroller.addScore(akinatorTime, user.getName(), user.getPasswd(), "akinator");
+				scorecontroller.addScore(steps, user.getName(), user.getPasswd(), "akinator");
 			}
-			return "Yay! You got it! Your plaing time was " + akinatorTime + "s.";
+			return "You are awesome! You guessed my number on "+steps+". try.";
 		}
 	}
 
