@@ -4,6 +4,8 @@
 	xmlns:o="http://omnifaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	
 	template="/WEB-INF/templates/index.xhtml">
 	<ui:define name="content">
 		<div class="row">
@@ -13,6 +15,12 @@
 				<br />
 				<h:form styleClass="center">
 					<h:panelGroup rendered="#{userController.logged}">
+					<!-- <c:forEach begin="1" end="10" var="rate">
+						<h:commandLink action="#{ratingController.addRating(rate,'akinator')}"
+								style=" margin-top:5px; font-size:#{25+rate*5}px"
+								class="glyphicon glyphicon-star-empty" />
+					</c:forEach> -->
+					
 						<h:commandLink action="#{ratingController.addRating(1,'akinator')}"
 							style=" margin-top:5px; font-size:30px"
 							class="glyphicon glyphicon-star-empty" />
@@ -43,6 +51,7 @@
 						<h:commandLink action="#{ratingController.addRating(10,'akinator')}"
 							style=" margin-top:5px; font-size:75px"
 							class="glyphicon glyphicon-star-empty" />
+							
 						<br />
 					</h:panelGroup>
 					<h:outputText value="You must SIGN IN, if you want to rate this game!" style="color:red; font-size:20px" rendered="#{!userController.logged}"/><br />

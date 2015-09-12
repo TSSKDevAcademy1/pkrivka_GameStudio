@@ -55,9 +55,19 @@ public class StonesServlet extends HttpServlet {
 		} else if (request.getParameter("stonesNewGame") != null) {
 			stonesNewGame = request.getParameter("stonesNewGame");
 		}
+<<<<<<< HEAD
 
 		if (stonesNewGame == null && stonesController.isNewGame()) {
 			stonesNewGame = "true";
+=======
+		if (!"".equals(stonesNewGame)) {
+			fieldStone = new Field(3, 3);
+			request.getSession().removeAttribute("fieldStone");
+			request.getSession().removeAttribute("stonesNewGame");
+			request.getSession().setAttribute("fieldStone", fieldStone);
+			request.getSession().setAttribute("stonesNewGame", stonesNewGame);
+			stonesStartTime = System.currentTimeMillis();
+>>>>>>> origin/master
 		}
 
 		if (rowToDo == null) {
@@ -66,6 +76,7 @@ public class StonesServlet extends HttpServlet {
 		if (columnToDo == null) {
 			columnToDo = "";
 		}
+<<<<<<< HEAD
 
 		if ("true".equals(stonesNewGame)) {
 			if (userController.isLogged()) {
@@ -80,6 +91,10 @@ public class StonesServlet extends HttpServlet {
 
 			request.getSession().removeAttribute("fieldStone");
 			request.getSession().removeAttribute("stonesNewGame");
+=======
+		if (request.getSession().getAttribute("fieldStone") == null) {
+			fieldStone = new Field(3, 3);
+>>>>>>> origin/master
 			request.getSession().setAttribute("fieldStone", fieldStone);
 			stonesNewGame = "false";
 			request.getSession().setAttribute("stonesNewGame", stonesNewGame);
